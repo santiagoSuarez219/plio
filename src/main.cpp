@@ -2,6 +2,7 @@
 #include <WiFi.h>
 #include <ArduinoJson.h>
 #include <Wire.h>
+#include <PubSubClient.h>
 
 #include "WiFiModule.h"
 #include "HttpModule.h"
@@ -12,6 +13,7 @@ const char *ssid = ""; // Nombre de la red WiFi
 const char *password = ""; // Contraseña de la red WiFi
 const char* server = ""; // Dirección IP del servidor HTTP
 const int http_port = 0; // Puerto del servidor HTTP 
+const int mqtt_port = 0; // Puerto del servidor MQTT
 
 const byte MLX90640_address = 0x33;
 #define TA_SHIFT 8
@@ -22,6 +24,7 @@ paramsMLX90640 mlx90640;
 const byte calcStart = 33;
 
 WiFiClient esp32Client;
+PubSubClient client(esp32Client);
 
 void setup()
 {
