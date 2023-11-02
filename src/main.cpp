@@ -1,19 +1,22 @@
 #include <Arduino.h>
+#include <WiFi.h>
+#include <ArduinoJson.h>
+
+#include "WiFiModule.h"
 #include "HttpModule.h"
 
-// put function declarations here:
-int myFunction(int, int);
+const char *ssid = ""; // Nombre de la red WiFi
+const char *password = ""; // Contraseña de la red WiFi
+const char* server = ""; // Dirección IP del servidor HTTP
+const int http_port = 0; // Puerto del servidor HTTP 
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+WiFiClient esp32Client;
+
+void setup()
+{
+  Serial.begin(115200);
+  WiFiModule::conectarWiFi(ssid, password);
 }
-
-void loop() {
-  // put your main code here, to run repeatedly:
-}
-
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+void loop()
+{
 }
