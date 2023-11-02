@@ -6,6 +6,7 @@
 
 #include "WiFiModule.h"
 #include "HttpModule.h"
+#include "MqttModule.h"
 #include "MLX90640_API.h"
 #include "MLX90640_I2C_Driver.h"
 
@@ -24,7 +25,7 @@ paramsMLX90640 mlx90640;
 const byte calcStart = 33;
 
 WiFiClient esp32Client;
-PubSubClient client(esp32Client);
+PubSubClient mqttClient(esp32Client);
 
 void setup()
 {
@@ -32,6 +33,8 @@ void setup()
   Wire.setClock(400000);
   Serial.begin(115200);
   WiFiModule::conectarWiFi(ssid, password);
+  mqttClient.setServer(server, mqtt_port);
+  mqttClient.setCallback(MqttModule::callback);
   int status;
   uint16_t eeMLX90640[832];
   status = MLX90640_DumpEE(MLX90640_address, eeMLX90640);
@@ -44,10 +47,16 @@ void setup()
 
   MLX90640_SetRefreshRate(MLX90640_address, 0x04);
   Wire.setClock(1000000);
+
 }
 
 void loop()
-{
+{ 
+  if (!mqttClient.connected())
+  {
+    MqttModule::conectarMQTT(mqttClient, server, mqtt_port, "smartgrow");
+  }
+  mqttClient.loop();
   for (byte x = 0 ; x < 2 ; x++)
   {
     uint16_t mlx90640Frame[834];
