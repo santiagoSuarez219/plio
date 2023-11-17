@@ -1,7 +1,4 @@
 #include "SCD40Sensor.h"
-#include "SparkFun_SCD4x_Arduino_Library.h"
-
-SCD4x mySensor;
 
 SCD40Sensor::SCD40Sensor(const char* id)
 {   
@@ -41,6 +38,18 @@ void SCD40Sensor::read()
     this->humedad = mySensor.getHumidity();
     this->co2 = mySensor.getCO2();
     this->VPD = calcularVPD(temperatura, humedad);
+}
+
+const String SCD40Sensor::buildJson() {
+    jsonDocument.clear();
+    jsonDocument["co2"] = this->co2;
+    jsonDocument["temperatura"] = this->temperatura;
+    jsonDocument["humedad"] = this->humedad;
+    jsonDocument["VPD"] = this->humedad;
+    jsonDocument["sensor"] = this->id;
+    String jsonString;
+    serializeJson(jsonDocument, jsonString);
+    return jsonString;
 }
 
 float SCD40Sensor::calcularVPD(float temperatura, float humedad){

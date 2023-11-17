@@ -1,6 +1,5 @@
 #include <Arduino.h>
 #include <Wire.h>
-#include <ArduinoJson.h>
 
 #include "WifiModule.h"
 #include "HttpModule.h"
@@ -32,14 +31,7 @@ void loop()
   {
     previousMillis = currentMillis;
     SCD40.read();
-    StaticJsonDocument<200> jsonDocument;
-    jsonDocument["co2"] = *SCD40.getCo2();
-    jsonDocument["temperatura"] = *SCD40.getTemperatura();
-    jsonDocument["humedad"] = *SCD40.getHumedad();
-    jsonDocument["VPD"] = *SCD40.getVPD();
-    jsonDocument["sensor"] = SCD40.getId();
-    String jsonString;
-    serializeJson(jsonDocument, jsonString);
+    String jsonString = SCD40.buildJson();
     httpClient.enviarDatosHTTP(jsonString.c_str(), "scd40");
     delay(1000);
   }
