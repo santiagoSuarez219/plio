@@ -6,10 +6,12 @@
 class HttpModule
 {
 public:
-    static void enviarDatosHTTP(const char *server, const int http_port, const char *jsonString, const char *path);
-    static void activarActuador(const char *server, const int http_port, const char *path, const char *idActuador);
+    HttpModule(const char* server, int http_port);
+    void enviarDatosHTTP(const char *jsonString, const char *path);
+    void activarActuador(const char *path, const char *idActuador);
+private:
+    const char *server;
+    int http_port;
+    void estructuraHttp(const char *path, const char *tipoSolicitud, const char* jsonString);
 };
-
-void estructuraHttp(String server, const int http_port, String path, String tipoSolicitud,const char *jsonString);
-
 #endif
